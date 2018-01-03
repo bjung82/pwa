@@ -29,14 +29,21 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-    //console.log('[Service Worker] Fetching something ....', event);
     event.respondWith(
         caches.match(event.request)
             .then(function(response){
                 if (response){
                     return response;
                 } else {
-                    return fetch(event.request);
+                    return fetch(event.request)
+                        .then(function(res) {
+                            caches.open('dynamic')
+                                .then(function(cache){
+                                    // Must store a clone, otherwise res would be consumed right now!
+                                    cache.put(event.request.url, res.clone());
+                                    return res;
+                                })
+                        });
                 }
             })
         )
