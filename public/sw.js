@@ -2,7 +2,7 @@ self.addEventListener('install', function(event) {
     console.log('[Service Worker] Installing Service Worker ...', event);
     // Make sure that cache is open before cache is accessed during fetch!
     event.waitUntil(
-        caches.open('static')
+        caches.open('static-v2')
         .then(function(cache){
             console.log('[Service Worker] Precaching App Shell');
             cache.addAll([
