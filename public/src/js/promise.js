@@ -4,7 +4,8 @@
  * Released under the MIT license
  * github.com/Octane/setImmediate
  */
-window.setImmediate || function () {'use strict';
+window.setImmediate || function () {
+  'use strict';
 
   var uid = 0;
   var storage = {};
@@ -68,7 +69,8 @@ window.setImmediate || function () {'use strict';
  * Released under the MIT license
  * github.com/Octane/Promise
  */
-(function (global) {'use strict';
+(function (global) {
+  'use strict';
 
   var STATUS = '[[PromiseStatus]]';
   var VALUE = '[[PromiseValue]]';
@@ -85,8 +87,8 @@ window.setImmediate || function () {'use strict';
 
   var setImmediate = global.setImmediate || require('timers').setImmediate;
   var isArray = Array.isArray || function (anything) {
-      return Object.prototype.toString.call(anything) == '[object Array]';
-    };
+    return Object.prototype.toString.call(anything) == '[object Array]';
+  };
 
   function InternalError(originalError) {
     this[ORIGINAL_ERROR] = originalError;
@@ -155,7 +157,7 @@ window.setImmediate || function () {'use strict';
     if (isPromise(anything)) {
       return anything;
     }
-    if(isObject(anything)) {
+    if (isObject(anything)) {
       try {
         then = anything.then;
       } catch (error) {
@@ -189,7 +191,7 @@ window.setImmediate || function () {'use strict';
     }
     try {
       resolver(resolve, reject);
-    } catch(error) {
+    } catch (error) {
       reject(error);
     }
   }

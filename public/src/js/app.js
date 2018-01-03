@@ -1,5 +1,9 @@
 var deferredPrompt;
 
+if (!window.Promise) {
+    window.Promise = Promise;
+}
+
 // check if the browser even supports service-workers
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
