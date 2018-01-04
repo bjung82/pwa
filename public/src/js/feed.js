@@ -26,8 +26,16 @@ function closeCreatePostModal() {
   createPostArea.style.display = 'none';
 }
 
+// Currently not in use, allows to save assets in cache on demand otherwise
 function onSaveButtonClicked(event) {
   console.log('Save clicked');
+  if ('caches' in window){
+    caches.open('user-requested')
+      .then(function(cache) {
+        cache.add('https://httpbin.org/get');
+        cache.add('/src/images/sf-boat.jpg');
+      });
+  }
 }
 
 shareImageButton.addEventListener('click', openCreatePostModal);
@@ -51,10 +59,12 @@ function createCard() {
   var cardSupportingText = document.createElement('div');
   cardSupportingText.className = 'mdl-card__supporting-text';
   cardSupportingText.textContent = 'In San Francisco';
-  var cardSaveButton = document.createElement('button');
+  
+/*   var cardSaveButton = document.createElement('button');
   cardSaveButton.textContent = 'Save';
   cardSaveButton.addEventListener('click', onSaveButtonClicked)
-  cardSupportingText.appendChild(cardSaveButton);
+  cardSupportingText.appendChild(cardSaveButton); */
+  
   cardSupportingText.style.textAlign = 'center';
   cardWrapper.appendChild(cardSupportingText);
   componentHandler.upgradeElement(cardWrapper);
