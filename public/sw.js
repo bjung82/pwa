@@ -78,7 +78,7 @@ self.addEventListener('fetch', function (event) {
         event.respondWith(fetch(event.request)
             .then(function(res) {
                 
-                // store data in the indexed-db.  
+                // store data in the indexed-db. 
                 var clonedRes = res.clone();
                 clearAllData('posts')
                     .then(function() {
