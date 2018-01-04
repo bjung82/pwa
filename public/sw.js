@@ -80,12 +80,15 @@ self.addEventListener('fetch', function (event) {
                 
                 // store data in the indexed-db.
                 var clonedRes = res.clone();
-                clonedRes.json().then(function(data) {
+                clearAllData('posts')
+                    .then(function() {
+                        return clonedRes.json();        
+                    })
+                    .then(function(data) {
                     for (var key in data){
                         writeData('posts', data[key]);
                     }
                 });
-
                 return res;
             })
         );
