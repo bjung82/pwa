@@ -82,7 +82,7 @@ self.addEventListener('fetch', function (event) {
                 var clonedRes = res.clone();
                 clonedRes.json().then(function(data) {
                     for (var key in data){
-                        writeDate('posts', data[key]);
+                        writeData('posts', data[key]);
                     }
                 });
 

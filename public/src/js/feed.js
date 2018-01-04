@@ -114,20 +114,13 @@ fetch(url)
     updateUI(convertPostToArray(data));
   });
 
-if ('caches' in window) {
-  caches.match(url)
-    .then(function (response) {
-      if (response) {
-        return response.json();
-      }
-    })
-    .then(function (data) {
+if ('indexedDB' in window) {
+  readAllData('posts').then(function(data) {
+    if (!networkDataReceived){
       console.log('From cache', data);
-      if (!networkDataReceived) {
-        clearCards();
-        updateUI(convertPostToArray(data));
-      }
-    });
+      updateUI(data);
+    }
+  });
 }
 
 
