@@ -36,7 +36,11 @@ function displayConfirmNotification() {
             vibrate: [100,50,200], // Vibration 100ms, Pause 50 ms, Vibration 200ms
             badge: '/src/images/icons/app-icon-96x96.png',
             tag: 'confirm-notification', // stacks notifications of the same tag to prevent flooding the user,
-            renotify: true // vibrate again even if stacked because of same tag
+            renotify: true, // vibrate again even if stacked because of same tag
+            actions: [
+                { action: 'confirm', title: 'Okay', icon: '/src/images/icons/app-icon-96x96.png'},
+                { action: 'cancel', title: 'Cancel', icon: '/src/images/icons/app-icon-96x96.png'},
+            ]
         };
         navigator.serviceWorker.ready.then(function(swreg){
             swreg.showNotification('Successfully subscribed (from SW)', options);
