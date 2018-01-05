@@ -98,7 +98,7 @@ function convertPostToArray(data) {
 
 function updateUI(data) {
   clearCards();
-  for (var i = 0; i < data.length; i++){
+  for (var i = 0; i < data.length; i++) {
     createCard(data[i]);
   }
 }
@@ -119,25 +119,45 @@ fetch(url)
   });
 
 if ('indexedDB' in window) {
-  readAllData('posts').then(function(data) {
-    if (!networkDataReceived){
+  readAllData('posts').then(function (data) {
+    if (!networkDataReceived) {
       console.log('From cache', data);
       updateUI(data);
     }
   });
 }
 
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', function (event) {
   event.preventDefault();
 
-  if (titleInput.value.trim() === '' || locationInput.value.trim() === ''){
+  if (titleInput.value.trim() === '' || locationInput.value.trim() === '') {
     alert('Please enter valid data');
     return;
   }
 
   closeCreatePostModal();
 
-  if ('serviceWorker' in navigator && 'SyncManager' in window){
-    
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
+    navigator.serviceWorker.ready.then(function (sw) {
+      // write data to indexedDB 
+      var post = {
+        id: new Date().toISOString(),
+        title: titleInput.value,
+        location: locationInput.value
+      }
+      writeData('sync-posts', post)
+        .then(function () {
+          // only after post was really written to indexedDB
+          return sw.sync.register('sync-new-post');
+        })
+        .then(function () {
+          var snackbackContainer = document.querySelector('#confirmation-toast');
+          var data = { message: 'Your Post was saved for syncing!' };
+          snackbackContainer.MaterialSnackbar.showSnackbar(data);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    });
   }
 });
