@@ -15,7 +15,7 @@ admin.initializeApp({
 
  exports.storePostData = functions.https.onRequest(function(request, response){
   cors(request, response, function(){
-    admin.database.ref('posts').push({
+    admin.database().ref('posts').push({
         id: request.body.id,
         title: request.body.title,
         location: request.body.location,
