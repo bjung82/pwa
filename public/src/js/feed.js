@@ -168,12 +168,12 @@ form.addEventListener('submit', function (event) {
       writeData('sync-posts', post)
         .then(function () {
           // only after post was really written to indexedDB
-          return sw.sync.register('sync-new-post');
+          return sw.sync.register('sync-new-posts');
         })
         .then(function () {
-          var snackbackContainer = document.querySelector('#confirmation-toast');
+          var snackbarContainer = document.querySelector('#confirmation-toast');
           var data = { message: 'Your Post was saved for syncing!' };
-          snackbackContainer.MaterialSnackbar.showSnackbar(data);
+          snackbarContainer.MaterialSnackbar.showSnackbar(data);
         })
         .catch(function (err) {
           console.log(err);

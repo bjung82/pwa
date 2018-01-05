@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v27';
+var CACHE_STATIC_NAME = 'static-v29';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 var STATIC_FILES = [
     '/',
@@ -20,6 +20,8 @@ var STATIC_FILES = [
     'https://fonts.googleapis.com/icon?family=Material+Icons',
     'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
 ];
+
+var url = 'https://pwagram-b105c.firebaseio.com/posts.json';
 
 // function trimCache(cacheName, maxItems) {
 //   caches.open(cacheName)
@@ -72,23 +74,23 @@ function isInArray(string, array) {
     return array.indexOf(cachePath) > -1;
 }
 
-self.addEventListener('fetch', function (event) {
-    var url = 'https://pwagram-b105c.firebaseio.com/posts.json';
+
+self.addEventListener('fetch', function (event) {   
     if (event.request.url.indexOf(url) > -1) {
         event.respondWith(fetch(event.request)
-            .then(function(res) {
-                
+            .then(function (res) {
+
                 // store data in the indexed-db.  
                 var clonedRes = res.clone();
                 clearAllData('posts')
-                    .then(function() {
-                        return clonedRes.json();        
+                    .then(function () {
+                        return clonedRes.json();
                     })
-                    .then(function(data) {
-                    for (var key in data){
-                        writeData('posts', data[key]);
-                    }
-                });
+                    .then(function (data) {
+                        for (var key in data) {
+                            writeData('posts', data[key]);
+                        }
+                    });
                 return res;
             })
         );
@@ -181,3 +183,38 @@ self.addEventListener('fetch', function (event) {
 //     fetch(event.request)
 //   );
 // });
+
+self.addEventListener('sync', function (event) {
+    console.log('[Service Worker] Background syncing', event);
+    if (event.tag === 'sync-new-posts') {
+        console.log('[Service Worker] Syncing new Posts');
+        event.waitUntil(readAllData('sync-posts')
+            .then(function (data) {
+                for (var dt of data) {
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: new Date().toISOString(),
+                            title: dt.title,
+                            location: dt.location,
+                            image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-b105c.appspot.com/o/sf-boat.jpg?alt=media&token=c8e03886-807a-4bd5-b3aa-708372bfd657'
+                        })
+                    })
+                        .then(function (res) {
+                            console.log('Send data', res);
+                            if (res.ok) {
+                                deleteItemFromData('sync-posts', dt.id); // bug here: id is already id of next iteration
+                            }
+                        })
+                        .catch(function(err){
+                            console.log('Error while sending data', err);
+                        });
+                }
+            })
+        );
+    }
+});
