@@ -137,5 +137,7 @@ form.addEventListener('submit', function(event) {
 
   closeCreatePostModal();
 
-  
+  if ('serviceWorker' in navigator && 'SyncManager' in window){
+    
+  }
 });
