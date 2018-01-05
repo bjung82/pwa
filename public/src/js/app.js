@@ -34,7 +34,9 @@ function displayConfirmNotification() {
             dir: 'ltr',
             lang: 'en-US', // BCP 47
             vibrate: [100,50,200], // Vibration 100ms, Pause 50 ms, Vibration 200ms
-            badge: '/src/images/icons/app-icon-96x96.png'
+            badge: '/src/images/icons/app-icon-96x96.png',
+            tag: 'confirm-notification', // stacks notifications of the same tag to prevent flooding the user,
+            renotify: true // vibrate again even if stacked because of same tag
         };
         navigator.serviceWorker.ready.then(function(swreg){
             swreg.showNotification('Successfully subscribed (from SW)', options);
