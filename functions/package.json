@@ -17,4 +17,5 @@
   "private": true,
   "scripts": {
     "web-push": "web-push"
+  }
 }
