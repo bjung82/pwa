@@ -26,7 +26,10 @@ window.addEventListener('beforeinstallprompt', function (even) {
 });
 
 function displayConfirmNotification() {
-    new Notification('Successfully subscribed');
+    var options = {
+        body: 'You successfully subscribed to our Notification Service'
+    };
+    new Notification('Successfully subscribed', options);
 }
 
 function askForNotificationPermission() {
