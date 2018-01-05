@@ -6,13 +6,18 @@ if (!window.Promise) {
 
 // check if the browser even supports service-workers
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-    .then(function() {
-        console.log('Service worker registered!');
-    });
+    navigator.serviceWorker
+        .register('/sw.js')
+        .then(function () {
+            console.log('Service worker registered!');
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
 }
 
-window.addEventListener('beforeinstallprompt', function(even) {
+
+window.addEventListener('beforeinstallprompt', function (even) {
     console.log("beforeinstallprompt fired");
     event.preventDefault();
     deferredPrompt = event;

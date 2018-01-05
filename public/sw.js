@@ -184,37 +184,43 @@ self.addEventListener('fetch', function (event) {
 //   );
 // });
 
-self.addEventListener('sync', function (event) {
+self.addEventListener('sync', function(event) {
     console.log('[Service Worker] Background syncing', event);
     if (event.tag === 'sync-new-posts') {
-        console.log('[Service Worker] Syncing new Posts');
-        event.waitUntil(readAllData('sync-posts')
-            .then(function (data) {
-                for (var dt of data) {
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            id: new Date().toISOString(),
-                            title: dt.title,
-                            location: dt.location,
-                            image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-b105c.appspot.com/o/sf-boat.jpg?alt=media&token=c8e03886-807a-4bd5-b3aa-708372bfd657'
-                        })
-                    })
-                        .then(function (res) {
-                            console.log('Send data', res);
-                            if (res.ok) {
-                                deleteItemFromData('sync-posts', dt.id); // bug here: id is already id of next iteration
-                            }
-                        })
-                        .catch(function(err){
-                            console.log('Error while sending data', err);
-                        });
-                }
-            })
-        );
+      console.log('[Service Worker] Syncing new Posts');
+      event.waitUntil(
+        readAllData('sync-posts')
+          .then(function(data) {
+            for (var dt of data) {
+              fetch('https://us-central1-pwagram-b105c.cloudfunctions.net/storePostData', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                  id: dt.id,
+                  title: dt.title,
+                  location: dt.location,
+                  image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-b105c.appspot.com/o/sf-boat.jpg?alt=media&token=c8e03886-807a-4bd5-b3aa-708372bfd657'
+                })
+              })
+                .then(function(res) {
+                  console.log('Sent data', res);
+                  if (res.ok) {
+                    res.json()
+                      .then(function(resData) {
+                        deleteItemFromData('sync-posts', resData.id);
+                      });
+                  }
+                })
+                .catch(function(err) {
+                  console.log('Error while sending data', err);
+                });
+            }
+  
+          })
+      );
     }
-});
+  });
+  
