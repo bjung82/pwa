@@ -39,7 +39,7 @@ admin.initializeApp({
             webpush.sendNotification(pushConfig, JSON.stringify({
               title: 'New Post', 
               content: 'New Post added!',
-              openUrl: '/help'
+              openUrl: '/'
             }))
               .catch(function(err) {
                 console.log(err);

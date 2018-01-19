@@ -238,7 +238,7 @@ self.addEventListener('notificationclick', function (event) {
                         return c.visibilityState === 'visible';
                     });
 
-                    if (client != undefined){
+                    if (client !== undefined){
                         client.navigate(notification.data.url);
                         client.focus();
                     } else {
@@ -259,12 +259,11 @@ self.addEventListener('push', function(event){
 
     var data = {title: 'New!', content: 'Something new happened', openUrl: '/'};
     
-    /* Bugfix: make sure event.data.text is filled! 
-    if (event.data && event.data.text){
-        data = JSON.parse(event.data.text);
-    }
-    */
     
+    if (event.data){
+        data = JSON.parse(event.data.text());
+    }
+        
     var options = {
         body: data.content,
         icon: '/src/images/icons/app-icon-96x96.png',
