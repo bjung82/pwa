@@ -24,7 +24,7 @@ admin.initializeApp({
       })
         .then(function () {
             webpush.setVapidDetails('mailto:zeus_job@gmx.de', 'BANt59DToCSRB31NjuOUzJRTPLMtVuSUTnj7sNmGIPRGRgBFTgYUuKU2q41fLWnh8FHrh4HpNAeyMgTCszqJ7wk', 'H7lR9kmScukp6RDDAvE-kT0n7cq63-UxCRZ7MWlpIgo');
-          return admin.database().ref('subscriptions').once('value');
+            return admin.database().ref('subscriptions').once('value');
         })
         .then(function (subscriptions) {
           subscriptions.forEach(function (sub) {

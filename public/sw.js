@@ -239,3 +239,22 @@ self.addEventListener('notificationclick', function (event) {
 self.addEventListener('notificationclose', function(event){
     console.log('Notification closed', event);
 });
+
+self.addEventListener('push', function(event){
+    console.log('Push notification received', event);
+
+    var data = {title: 'New!', content: 'Something new happened'}
+    if (event.data && event.data.text){
+        data = JSON.parse(event.data.text);
+    }
+
+    var options = {
+        body: data.content,
+        icon: '/src/images/icons/app-icon-96x96.png',
+        badge: '/src/images/icons/app-icon-96x96.png'
+    }
+    // access the browser DOM from the Service-Worker
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    )
+});
