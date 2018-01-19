@@ -239,10 +239,10 @@ self.addEventListener('notificationclick', function (event) {
                     });
 
                     if (client != undefined){
-                        client.navigate('http://localhost:8080');
+                        client.navigate(notification.data.url);
                         client.focus();
                     } else {
-                        clients.openWindow('http://localhost:8080');
+                        clients.openWindow(notification.data.url);
                     }
                     notification.close();
                 })
@@ -257,22 +257,23 @@ self.addEventListener('notificationclose', function(event){
 self.addEventListener('push', function(event){
     console.log('Push notification received', event);
 
-    var data = {title: 'New!', content: 'Something new happened'}
+    var data = {title: 'New!', content: 'Something new happened', openUrl: '/'};
     
-    /* 
-    BUG1: cannot use event.data.text -> Parse exception
-    BUG2: Adding entries (or opening notifications) does not refresh the app
-
+    /* Bugfix: make sure event.data.text is filled! 
     if (event.data && event.data.text){
         data = JSON.parse(event.data.text);
-    }*/
-
+    }
+    */
+    
     var options = {
         body: data.content,
         icon: '/src/images/icons/app-icon-96x96.png',
-        badge: '/src/images/icons/app-icon-96x96.png'
-    }
-    // access the browser DOM from the Service-Worker
+        badge: '/src/images/icons/app-icon-96x96.png',
+        data: {
+            url: data.openUrl
+        }
+    };
+
     event.waitUntil(
         self.registration.showNotification(data.title, options)
     )
