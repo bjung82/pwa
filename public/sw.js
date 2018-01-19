@@ -244,9 +244,14 @@ self.addEventListener('push', function(event){
     console.log('Push notification received', event);
 
     var data = {title: 'New!', content: 'Something new happened'}
+    
+    /* 
+    BUG1: cannot use event.data.text -> Parse exception
+    BUG2: Adding entries (or opening notifications) does not refresh the app
+
     if (event.data && event.data.text){
         data = JSON.parse(event.data.text);
-    }
+    }*/
 
     var options = {
         body: data.content,
