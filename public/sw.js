@@ -231,9 +231,23 @@ self.addEventListener('notificationclick', function (event) {
     if (action === 'confirm') {
         console.log('Confirm was chosen');
     } else {
-        console.log('Notification action: ' + action);
+        event.waitUntil(
+            clients.matchAll()
+                .then(function(clis) {
+                    var client = clis.find(function(c){
+                        return c.visibilityState === 'visible';
+                    });
+
+                    if (client != undefined){
+                        client.navigate('http://localhost:8080');
+                        client.focus();
+                    } else {
+                        clients.openWindo('http://localhost:8080');
+                    }
+                    notification.close();
+                })
+        );
     }
-    notification.close();
 });
 
 self.addEventListener('notificationclose', function(event){
