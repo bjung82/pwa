@@ -242,7 +242,7 @@ self.addEventListener('notificationclick', function (event) {
                         client.navigate('http://localhost:8080');
                         client.focus();
                     } else {
-                        clients.openWindo('http://localhost:8080');
+                        clients.openWindow('http://localhost:8080');
                     }
                     notification.close();
                 })
