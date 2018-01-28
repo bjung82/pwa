@@ -28,11 +28,6 @@ admin.initializeApp({
 });
 
 exports.storePostData = functions.https.onRequest(function(request, response) {
-  console.log(request);
-
-    request.set('Access-Control-Allow-Origin', '*' )
-      .set('Access-Control-Allow-Methods', 'GET, POST')
-      .status(200);
 
   cors(request, response, function() {
     var uuid = UUID();
@@ -122,9 +117,11 @@ exports.storePostData = functions.https.onRequest(function(request, response) {
                       console.log(err);
                     });
                 });
+
                 response
                   .status(201)
                   .json({ message: "Data stored", id: fields.id });
+                  
               })
               .catch(function(err) {
                 response.status(500).json({ error: err });
